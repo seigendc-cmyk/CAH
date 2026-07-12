@@ -1,0 +1,9 @@
+{
+  "name": "@eot/pack-builder",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@eot/data-pack-sdk": "*",
+    "@eot/shared-types": "*"
+  }
+}
