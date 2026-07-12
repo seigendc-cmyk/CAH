@@ -12,6 +12,7 @@
   "dependencies": {
     "@eot/shared-types": "^1.0.0",
     "@eot/ui-components": "^1.0.0",
+    "firebase": "^12.16.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

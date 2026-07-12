@@ -1,0 +1,102 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    match /customers/{customerId} {
+      allow create: if isOwner(customerId)
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email == request.auth.token.email;
+
+      allow read, update: if isOwner(customerId);
+
+      allow delete: if false;
+    }
+
+    match /vendors/{vendorId} {
+      allow read: if true;
+
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid;
+
+      allow update: if signedIn()
+        && resource.data.ownerUid == request.auth.uid
+        && request.resource.data.ownerUid == request.auth.uid;
+
+      allow delete: if false;
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /books/{bookId} {
+      allow read: if resource.data.bookStatus == 'published';
+      allow write: if false;
+    }
+
+    match /seasons/{seasonId} {
+      allow read: if resource.data.status == 'published';
+      allow write: if false;
+    }
+
+    match /episodes/{episodeId} {
+      allow read: if resource.data.status == 'published';
+      allow write: if false;
+    }
+
+    match /chapters/{chapterId} {
+      allow read: if resource.data.status == 'published';
+      allow write: if false;
+    }
+
+    match /readerProgress/{progressId} {
+      allow create: if signedIn()
+        && request.resource.data.customerId == request.auth.uid;
+
+      allow read, update, delete: if signedIn()
+        && resource.data.customerId == request.auth.uid;
+    }
+
+    match /bookmarks/{bookmarkId} {
+      allow create: if signedIn()
+        && request.resource.data.customerId == request.auth.uid;
+
+      allow read, update, delete: if signedIn()
+        && resource.data.customerId == request.auth.uid;
+    }
+
+    match /readerNotes/{noteId} {
+      allow create: if signedIn()
+        && request.resource.data.customerId == request.auth.uid;
+
+      allow read, update, delete: if signedIn()
+        && resource.data.customerId == request.auth.uid;
+    }
+
+    match /entitlements/{entitlementId} {
+      allow read: if signedIn()
+        && resource.data.customerId == request.auth.uid;
+
+      allow write: if false;
+    }
+
+    match /staffUsers/{staffId} {
+      allow read: if isOwner(staffId);
+      allow write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

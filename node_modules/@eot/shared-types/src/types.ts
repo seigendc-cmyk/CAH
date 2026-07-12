@@ -328,3 +328,44 @@ export interface ReaderProgress {
   scrollPosition: number;
   updatedAt: string;
 }
+
+export type CustomerStatus =
+  | 'active'
+  | 'suspended'
+  | 'deleted';
+
+export interface Customer {
+  id: string;
+  uid: string;
+  email: string;
+  displayName?: string;
+  photoUrl?: string;
+  phoneNumber?: string;
+  country?: string;
+  preferredLanguage?: string;
+  status: CustomerStatus;
+  provider: 'google.com';
+  createdAt: string;
+  updatedAt: string;
+  lastLoginAt: string;
+}
+
+export type StaffRole =
+  | 'administrator'
+  | 'publisher'
+  | 'editor'
+  | 'support'
+  | 'analyst';
+
+export interface StaffUser {
+  id: string;
+  uid: string;
+  email: string;
+  displayName?: string;
+  photoUrl?: string;
+  roles: StaffRole[];
+  status: 'active' | 'suspended';
+  createdAt: string;
+  updatedAt: string;
+  lastLoginAt: string;
+}
