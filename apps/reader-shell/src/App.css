@@ -69,3 +69,80 @@
   color: #ff9800;
   border-bottom: 2px solid #ff9800;
 }
+
+.auth-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #f4f4f4;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  text-align: center;
+}
+
+.auth-card h1 {
+  margin-top: 0;
+  color: #ef8b00;
+}
+
+.google-sign-in-button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px 18px;
+  border: 0;
+  background: #222222;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.google-sign-in-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.auth-error {
+  margin: 16px;
+  padding: 12px;
+  border: 1px solid #b3261e;
+  background: #fff2f2;
+  color: #b3261e;
+}
+
+.signed-in-customer {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #dddddd;
+}
+
+.customer-profile {
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #dddddd;
+}
+
+.customer-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.sign-out-button {
+  margin-top: 16px;
+  padding: 12px 18px;
+  border: 0;
+  background: #333333;
+  color: #ffffff;
+  cursor: pointer;
+}
+
