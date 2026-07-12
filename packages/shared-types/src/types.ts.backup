@@ -1,4 +1,4 @@
-﻿export const DEFAULT_PUBLISHER = {
+export const DEFAULT_PUBLISHER = {
   name: 'JE Trust',
 };
 
@@ -340,23 +340,11 @@ export interface Customer {
   email: string;
   displayName?: string;
   photoUrl?: string;
-  passportPhotoUrl?: string;
-  passportPhotoPath?: string;
-
   phoneNumber?: string;
-  dateOfBirth?: string;
-
-  addressLine1?: string;
-  suburb?: string;
-  city?: string;
-  province?: string;
   country?: string;
-  postalCode?: string;
-
+  preferredLanguage?: string;
   status: CustomerStatus;
   provider: 'google.com';
-  profileCompleted: boolean;
-
   createdAt: string;
   updatedAt: string;
   lastLoginAt: string;
@@ -375,13 +363,9 @@ export interface StaffUser {
   email: string;
   displayName?: string;
   photoUrl?: string;
-  passportPhotoUrl?: string;
-  passportPhotoPath?: string;
   roles: StaffRole[];
   status: 'active' | 'suspended';
   createdAt: string;
   updatedAt: string;
   lastLoginAt: string;
 }
-
-

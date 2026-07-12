@@ -1,0 +1,23 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    match /customers/{customerId}/passport-photo/{fileName} {
+      allow read: if request.auth != null
+        && request.auth.uid == customerId;
+
+      allow create, update: if request.auth != null
+        && request.auth.uid == customerId
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)');
+
+      allow delete: if request.auth != null
+        && request.auth.uid == customerId;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
