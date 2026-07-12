@@ -7,6 +7,12 @@
       "hosting": {
         "public": [
           "empireot"
+        ],
+        "console": [
+          "console-itred-app"
+        ],
+        "reader": [
+          "gen-lang-client-0459000055-9aace"
         ]
       }
     }
