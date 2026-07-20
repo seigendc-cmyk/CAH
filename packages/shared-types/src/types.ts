@@ -1,4 +1,4 @@
-﻿export const DEFAULT_PUBLISHER = {
+export const DEFAULT_PUBLISHER = {
   name: 'JE Trust',
 };
 
@@ -63,6 +63,8 @@ export interface Subcategory {
 }
 
 export type ContentBlockType =
+  | 'header'
+  | 'title'
   | 'paragraph'
   | 'heading'
   | 'subheading'
@@ -70,6 +72,7 @@ export type ContentBlockType =
   | 'ordered-list'
   | 'unordered-list'
   | 'image'
+  | 'divider'
   | 'callout'
   | 'table'
   | 'graph'
@@ -106,7 +109,7 @@ export interface Chapter extends BaseEntity {
   wordCount?: number;
   estimatedReadingTime?: number;
   editorialNotes?: string;
-  sections: Section[];
+  blocks: ContentBlock[];
 }
 
 export interface Episode extends BaseEntity {
@@ -384,4 +387,12 @@ export interface StaffUser {
   lastLoginAt: string;
 }
 
-
+export interface Entitlement {
+  id?: string;
+  customerId: string;
+  bookId: string;
+  accessType: 'free' | 'purchase' | 'subscription' | 'promotion';
+  status: 'active' | 'revoked' | 'expired';
+  grantedAt: any;
+  expiresAt: any | null;
+}

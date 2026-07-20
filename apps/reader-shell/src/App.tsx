@@ -15,6 +15,9 @@ import {
   type CustomerProfile,
 } from './services/customer-auth-service';
 
+import { getCustomerLibrary } from './services/entitlement-service';
+import type { Book } from '@eot/shared-types';
+
 import PassportPhotoUploader from './components/PassportPhotoUploader';
 
 import './App.css';
@@ -92,6 +95,11 @@ function App() {
   const [authError, setAuthError] = useState('');
   const [profileError, setProfileError] = useState('');
 
+  const [libraryBooks, setLibraryBooks] = useState<Book[]>([]);
+  const [libraryLoading, setLibraryLoading] = useState(false);
+  const [libraryError, setLibraryError] = useState('');
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+
   useEffect(() => {
     const unsubscribe = observeCustomerAuth((user) => {
       setCustomer(user);
@@ -158,6 +166,48 @@ function App() {
       cancelled = true;
     };
   }, [customer]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadLibrary = async () => {
+      if (!customer) {
+        setLibraryBooks([]);
+        return;
+      }
+
+      setLibraryLoading(true);
+      setLibraryError('');
+
+      try {
+        const result = await getCustomerLibrary(customer.uid);
+        
+        if (cancelled) {
+          return;
+        }
+        
+        setLibraryBooks(result.books);
+      } catch (error) {
+        console.error('Could not load library:', error);
+
+        if (!cancelled) {
+          setLibraryError('Your library could not be loaded. Please try again.');
+        }
+      } finally {
+        if (!cancelled) {
+          setLibraryLoading(false);
+        }
+      }
+    };
+
+    if (currentRoute === 'library') {
+      void loadLibrary();
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [customer, currentRoute]);
 
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
@@ -558,12 +608,49 @@ function App() {
           <div className="content">
             <h2>My Library</h2>
 
-            <div className="empty-state">
-              <p>
-                Your library is empty. Install data packs to start
-                reading.
-              </p>
-            </div>
+            {libraryLoading ? (
+              <div className="library-loading">
+                <p>Loading your library...</p>
+              </div>
+            ) : libraryError ? (
+              <div className="library-error">
+                <p>{libraryError}</p>
+                <button type="button" onClick={() => setCurrentRoute('library')}>
+                  Retry
+                </button>
+              </div>
+            ) : libraryBooks.length === 0 ? (
+              <div className="empty-state">
+                <p>
+                  Your library is empty. Books you receive or purchase will appear here.
+                </p>
+              </div>
+            ) : (
+              <div className="book-grid">
+                {libraryBooks.map((book) => (
+                  <div 
+                    key={book.id} 
+                    className="book-card"
+                    onClick={() => {
+                      setSelectedBookId(book.id);
+                      setCurrentRoute('reader');
+                    }}
+                  >
+                    <div className="book-cover">
+                      {book.frontCoverAssetId ? (
+                        <img src={book.frontCoverAssetId} alt={book.title} />
+                      ) : (
+                        <div className="book-cover-placeholder">No Cover Available</div>
+                      )}
+                    </div>
+                    <div className="book-info">
+                      <h3 className="book-title">{book.title}</h3>
+                      {book.subtitle && <p className="book-subtitle">{book.subtitle}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         );
 
@@ -582,7 +669,11 @@ function App() {
         return (
           <div className="content">
             <h2>Reader</h2>
-            <p>Select a book or installed data pack to begin reading.</p>
+            {selectedBookId ? (
+              <p>Opening book ID: {selectedBookId}</p>
+            ) : (
+              <p>Select a book or installed data pack to begin reading.</p>
+            )}
           </div>
         );
 
